@@ -11,4 +11,10 @@ namespace eigenml { namespace logging {
 
     }
 
+    BoostLogger setNameAttribute(const std::string& name) {
+        BoostLogger lg;
+        lg.add_attribute("Name", boost::log::attributes::constant<std::string>(name));
+        return lg;
+    }
+
 }}

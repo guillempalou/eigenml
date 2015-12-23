@@ -1,3 +1,6 @@
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
+
 #include <string>
 #include <iostream>
 
@@ -23,4 +26,8 @@ namespace eigenml { namespace logging {
  
     };
 
+    BoostLogger setNameAttribute(const std::string& name);
+
 }}
+
+#endif // LOGGER_HPP
