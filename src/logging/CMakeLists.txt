@@ -1,6 +1,6 @@
 # find logging packages
 find_package(Threads)
-find_package(Boost ${BOOST_VERSION} COMPONENTS log log_setup thread REQUIRED)
+find_package(Boost ${BOOST_VERSION} COMPONENTS system log log_setup thread REQUIRED)
 
 # find the cpp
 file(GLOB SRCS *.cpp)

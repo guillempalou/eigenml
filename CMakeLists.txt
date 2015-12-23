@@ -1,7 +1,7 @@
 project(eigenml)
 cmake_minimum_required(VERSION 2.8)
 
-# set some options
+# set some global options
 set(BOOST_VERSION 1.59.0)
 set(optimization "-O2")
 set(warnings "-Wall -Wextra -Werror")
