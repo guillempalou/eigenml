@@ -1,13 +1,23 @@
-#ifndef __RF_DECISION_TREE_CLASSIFIER_HPP__
-#define __RF_DECISION_TREE_CLASSIFIER_HPP__
+#ifndef DECISION_TREE_HPP
+#define DECISION_TREE_HPP
 
-#include <random_forest/model.hpp>
-#include <random_forest/tree/decision_tree_params.hpp>
+#include <vector>
 
-namespace random_forest {
+#include <eigenml/core/model.hpp>
+#include <eigenml/core/vectors/sorting.hpp>
 
-    template<class Matrix>
-    class DecisionTree : public Model<Matrix> {
+#include <eigenml/tree/decision_tree_params.hpp>
+#include <eigenml/tree/node.hpp>
+
+#include <eigenml/logging/printing.hpp>
+
+namespace eigenml { namespace tree {
+
+    template<class FeatureMatrix, class TargetMatrix> 
+    class DecisionTree : public core::Model<FeatureMatrix, TargetMatrix> {
+
+        typedef Node<FeatureMatrix, TargetMatrix> NodeType;
+
     public:
 
         DecisionTree(const DecisionTreeParams& params = DecisionTreeParams()) {
@@ -18,20 +28,28 @@ namespace random_forest {
         ~DecisionTree() {
         }
 
-        bool fit(const Matrix &X, const Matrix &Y) {
+        bool fit(const FeatureMatrix &X, const TargetMatrix &Y) {
             // first some assertions
             
-            // add the initial node
-            int n_examples = X.rows()
+            if (!nodes.empty()) {
+                nodes.clear();
+            }
 
-            Node root(0, X, Y);
+            std::vector<std::vector<size_t> > sorted_cols;
+
+            for (int i = 0; i < X.cols(); i++) {
+                std::vector<size_t> sorted_idx = core::argsort(X.col(i));
+                sorted_cols.push_back(sorted_idx);
+            }
+
+            NodeType root(0, X, Y, sorted_cols);
             nodes.push_back(root);
 
             int head = 1;
             int tail = 0;
 
             while (tail < head) {
-                Node& n = nodes[tail];
+                NodeType& n = nodes[tail];
 
                 auto splitted = n.split(params);
                 for (auto child = splitted.begin(); child != splitted.end(); ++child) {
@@ -42,8 +60,9 @@ namespace random_forest {
             return true;
         }
 
-        Matrix transform(const Matrix &X) {
-            return Matrix();
+        TargetMatrix transform(const FeatureMatrix &X) {
+            X.sum();
+            return TargetMatrix();
         }
 
     private:
@@ -52,9 +71,10 @@ namespace random_forest {
         DecisionTreeParams params;
         
         // nodes of the tree
-        std::vector<Node> nodes;
+        std::vector<NodeType> nodes;
 
     };
-}
+
+}}
 
 #endif
