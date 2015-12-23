@@ -1,6 +1,7 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
+#include <eigenml/core/types.hpp>
 #include <eigenml/logging/logging.hpp>
 
 namespace eigenml { namespace core {
@@ -21,7 +22,7 @@ namespace eigenml { namespace core {
         virtual TargetMatrix transform(const FeatureMatrix &X) = 0;
         
         // TODO improve the error handling?
-        TargetMatrix fit_transform(const FeatureMatrix& X, const TargetMatrix& Y);
+        TargetMatrix fit_transform(const FeatureMatrix& X, const TargetMatrix& Y = nullptr);
     };
     
 }}

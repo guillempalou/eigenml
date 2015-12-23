@@ -9,30 +9,19 @@
 using namespace std;
 using namespace eigenml;
 
-typedef Eigen::MatrixXd dMatrix;
-typedef Eigen::VectorXd dVector;
-typedef Eigen::MatrixXi iMatrix;
-typedef Eigen::VectorXi iVector;
-
 int main() {
 
     logging::init_cerr_log(logging::severity_level::trace);
 
     logging::Logger lg("MAIN");
-    // lg.trace << "Hello world!";
-    // 
-    LOG_INFO(lg) << "Hola";
 
-    // BOOST_LOG_SEV(lg, logging::severity_level::error) << "Hello world!";
-    
+    size_t N = 10;
+    Matrix X = Matrix::Random(N, 3);
+    Matrix c = Matrix::Random(3, 1);
+    Vector Y(N);
 
-    // size_t N = 10;
-    // dMatrix X = dMatrix::Random(N, 3);
-    // dMatrix c = dMatrix::Random(3, 1);
-    // iVector Y(N);
-
-    // c << -1, 2, 1;
-    // Y = ((X * c).array() < 0).cast<int>();
+    c << -1, 2, 1;
+    Y = ((X * c).array() < 0).cast<double>();
 
     // // Declare a tree
     // tree::DecisionTreeParams params;
