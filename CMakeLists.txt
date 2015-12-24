@@ -8,6 +8,12 @@ set(warnings "-Wall -Wextra -Werror")
 set(c_11 "-g -std=c++11 -pedantic")
 set(CMAKE_CXX_FLAGS "${opimization} ${warnings} ${c_11}")
 
+
+# add some general include directories
+# for src/ and test/
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories("/usr/local/include/eigen3")
+
 # set dynamic linking for boost
 add_definitions(-DBOOST_LOG_DYN_LINK)
 

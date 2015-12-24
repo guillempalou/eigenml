@@ -3,7 +3,7 @@ find_package(Threads)
 find_package(Boost ${BOOST_VERSION} COMPONENTS system log log_setup thread REQUIRED)
 
 # find the cpp
-file(GLOB SRCS *.cpp)
+file(GLOB_RECURSE SRCS *.cpp)
 add_library(eigenml_logging ${SRCS})
 
 # find the boost log library
