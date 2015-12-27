@@ -6,11 +6,11 @@
 
 #include <eigenml/logging/init_logging.hpp>
 
-#define LOG_TRACE(lg) BOOST_LOG_SEV(lg.logger, boost::log::trivial::trace)
-#define LOG_DEBUG(lg) BOOST_LOG_SEV(lg.logger, boost::log::trivial::debug)
-#define LOG_INFO(lg) BOOST_LOG_SEV(lg.logger, boost::log::trivial::info)
-#define LOG_WARN(lg) BOOST_LOG_SEV(lg.logger, boost::log::trivial::warn)
-#define LOG_ERROR(lg) BOOST_LOG_SEV(lg.logger, boost::log::trivial::error)
+#define LOG_TRACE BOOST_LOG_SEV(logger.logger, boost::log::trivial::trace)
+#define LOG_DEBUG BOOST_LOG_SEV(logger.logger, boost::log::trivial::debug)
+#define LOG_INFO BOOST_LOG_SEV(logger.logger, boost::log::trivial::info)
+#define LOG_WARN BOOST_LOG_SEV(logger.logger, boost::log::trivial::warning)
+#define LOG_ERROR BOOST_LOG_SEV(logger.logger, boost::log::trivial::error)
 
 namespace eigenml { namespace logging {
 

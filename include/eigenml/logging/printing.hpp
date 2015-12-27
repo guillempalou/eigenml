@@ -1,20 +1,23 @@
 #include <iostream>
+#include <sstream>
 
 namespace eigenml { namespace logging {
 
     template<class Vector>
-    void print_vector(const Vector& v) {
+    std::string vector_str(const Vector& v) {
+        std::ostringstream os;
         for (auto& i: v)
-            std::cout << i << ' ';
-        std::cout << std::endl;
+            os << i << ' ';
+        return os.str();
     }
 
     template<class Map>
-    void print_map(const Map& m) {
+    std::string map_str(const Map& m) {
+        std::ostringstream os;
         for (auto& i: m) {
-            std::cout << "(" << i.first << ", " << i.second << ") ";
+            os << "(" << i.first << ", " << i.second << ") ";
         }
-        std::cout << std::endl;
+        return os.str();
     }
     
 }}

@@ -1,3 +1,6 @@
+#ifndef INIT_LOGGING_HPP
+#define INIT_LOGGING_HPP
+
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
@@ -24,4 +27,7 @@ namespace eigenml { namespace logging {
     void init_cout_log(severity_level severity);
 
     void init_file_log(std::string filename, size_t max_size, severity_level severity); 
+
 }}
+
+#endif // INIT_LOGGING_HPP

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace eigenml { namespace tree {
+namespace eigenml { namespace decision_tree {
 
     enum SplitCriterion {
         ENTROPY_CRITERION,
@@ -20,11 +20,6 @@ namespace eigenml { namespace tree {
         SplitCriterion criterion = DEFAULT_CRITERION;
         size_t max_depth = DEFAULT_MAX_DEPTH;
         size_t min_examples = DEFAULT_MIN_EXAMPLES;
-
-        // default constructor with default values
-        DecisionTreeParams() {
-        }
-
     };
 
 }}

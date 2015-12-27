@@ -4,7 +4,7 @@
 using namespace eigenml;
 using namespace eigenml::core;
 
-TEST(ArgSortTest, AssertionTrue) {
+TEST(ArgSortTest, EasySort) {
     Vector v(3);
     v << 1, 4, 2;
 
