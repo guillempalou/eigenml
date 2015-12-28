@@ -22,7 +22,7 @@ namespace eigenml { namespace decision_tree {
 
     //TODO find_regression_threshold
     ValueAndWeight entropy(const Histogram& histogram) {
-        size_t n = 0;
+        double n = 0;
             // count elements on the histogram
         for (auto& e: histogram)
             n+=e.second;
@@ -34,6 +34,20 @@ namespace eigenml { namespace decision_tree {
             ent += (p != 0) ? -p*std::log2(p) : 0;
         }
         return ValueAndWeight(ent, n);
+    }
+
+    ValueAndWeight gini(const Histogram& histogram) {
+        double n = 0;
+        for (auto& e: histogram)
+            n+=e.second;
+        if (n == 0)
+            return ValueAndWeight(0, 0);
+        double gini = 0;
+        for (auto& e: histogram) {
+            double p = e.second*1.0/n;
+            gini += p*(1-p);
+        }
+        return ValueAndWeight(gini, n);
     }
 
     // TODO add gini and mse

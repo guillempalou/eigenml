@@ -4,6 +4,24 @@
 using namespace eigenml;
 using namespace eigenml::decision_tree;
 
+TEST(ThresholdFinding, Entropy) {
+    Histogram hist;
+    hist[0] = 10;
+    hist[1] = 10;
+    ValueAndWeight v = entropy(hist);
+    ASSERT_DOUBLE_EQ(v.first, 1);
+    ASSERT_DOUBLE_EQ(v.second, 20);
+}
+
+TEST(ThresholdFinding, Gini) {
+    Histogram hist;
+    hist[0] = 10;
+    hist[1] = 10;
+    ValueAndWeight v = gini(hist);
+    ASSERT_DOUBLE_EQ(v.first, 0.5);
+    ASSERT_DOUBLE_EQ(v.second, 20);
+}
+
 TEST(ThresholdFinding, Simplethreshold) {
     size_t N = 2;
     Matrix X(N, 1);

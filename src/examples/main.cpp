@@ -16,7 +16,7 @@ int main() {
 
     std::srand((unsigned int) time(0));
 
-    size_t N = 2;
+    size_t N = 10;
     Matrix X = Matrix::Random(N, 3);
     Matrix c = Matrix::Random(3, 1);
     Vector Y(N);
@@ -29,7 +29,7 @@ int main() {
     std::iota(I.data(), I.data() + I.size(), 0);
     XY << I, X, Y;
 
-    std::cout << XY << std::endl;
+    LOG_DEBUG << XY;
 
     // // Declare a tree
     LOG_INFO << "Fitting a tree";

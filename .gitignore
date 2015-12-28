@@ -1,6 +1,7 @@
 # CMake directories and Mac
 build/
 .DS_Store
+Testing
 
 # Compiled Object files
 *.slo
