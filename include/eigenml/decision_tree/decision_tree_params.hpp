@@ -6,20 +6,20 @@
 namespace eigenml { namespace decision_tree {
 
     enum SplitCriterion {
-        ENTROPY_CRITERION,
-        GINI_CRITERION,
-        MSE_CRITERION
+        kEntropyCriterion,
+        kGiniCriterion,
+        kMSECriterion
     };
 
     struct DecisionTreeParams {
 
-        static const int DEFAULT_MAX_DEPTH = 5;
-        static const int DEFAULT_MIN_EXAMPLES = 1;
-        static const SplitCriterion DEFAULT_CRITERION = SplitCriterion::ENTROPY_CRITERION;
+        static const int kDefaultMaxDepth = 5;
+        static const int kDefaultMinSamples = 1;
+        static const SplitCriterion kDefaultCriterion = SplitCriterion::kGiniCriterion;
 
-        SplitCriterion criterion = DEFAULT_CRITERION;
-        size_t max_depth = DEFAULT_MAX_DEPTH;
-        size_t min_examples = DEFAULT_MIN_EXAMPLES;
+        size_t max_depth = kDefaultMaxDepth;
+        SplitCriterion criterion = kDefaultCriterion;
+        size_t min_samples = kDefaultMinSamples;
     };
 
 }}

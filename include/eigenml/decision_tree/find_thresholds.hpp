@@ -20,8 +20,10 @@ namespace eigenml { namespace decision_tree {
         }
     };
 
+    // TODO move entropy to metrics module
     //TODO find_regression_threshold
-    ValueAndWeight entropy(const Histogram& histogram) {
+    template<class Hist>
+    ValueAndWeight entropy(const Hist& histogram) {
         double n = 0;
             // count elements on the histogram
         for (auto& e: histogram)
@@ -36,7 +38,8 @@ namespace eigenml { namespace decision_tree {
         return ValueAndWeight(ent, n);
     }
 
-    ValueAndWeight gini(const Histogram& histogram) {
+    template<class Hist>
+    ValueAndWeight gini(const Hist& histogram) {
         double n = 0;
         for (auto& e: histogram)
             n+=e.second;

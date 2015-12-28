@@ -33,7 +33,7 @@ TEST(ThresholdFinding, SimplethresholdEntropy) {
     IdxVector idx{0, 1};
     IdxVector sorted{0, 1};
 
-    auto criterion = Criterion(entropy);
+    auto criterion = Criterion(entropy<Histogram>);
 
     ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
 
@@ -54,7 +54,7 @@ TEST(ThresholdFinding, SimplethresholdGini) {
     IdxVector idx{0, 1};
     IdxVector sorted{0, 1};
 
-    auto criterion = Criterion(gini);
+    auto criterion = Criterion(gini<Histogram>);
 
     ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
 

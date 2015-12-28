@@ -23,7 +23,7 @@ namespace eigenml { namespace decision_tree {
 
     public:
 
-        DecisionTree(const DecisionTreeParams& params = DecisionTreeParams())  : params(params) {
+        DecisionTree(const DecisionTreeParams& params = DecisionTreeParams())  : params_(params) {
         }
 
         ~DecisionTree() {
@@ -32,34 +32,37 @@ namespace eigenml { namespace decision_tree {
 
         bool fit(const FeatureMatrix &X, const TargetMatrix &Y) {
             // check if the tree has been fitted before
-            if (root) {
+            if (root_) {
                 LOG_WARN << "Tree not empty, refitting";
-                root.reset();
+                root_.reset();
             }
 
             std::vector<IdxVector> sorted_indexes;
-            size_t n_examples = X.rows();
+            size_t n_samples = X.rows();
+
+            if (n_samples == 0)
+                throw core::InsufficientSamplesException(n_samples);
 
             for (int i = 0; i < X.cols(); i++) {
                 LOG_TRACE << "Sorting col " << i;
                 std::vector<size_t> argsorted = core::argsort(X.col(i));
 
                 // populate the table for lookups
-                IdxVector idx(n_examples);
-                for (size_t k = 0; k < n_examples; k++) 
+                IdxVector idx(n_samples);
+                for (size_t k = 0; k < n_samples; k++) 
                     idx[argsorted[k]] = k;
 
                 sorted_indexes.push_back(idx);
             }
 
             LOG_INFO << "Creating tree";
-            root = std::make_shared<NodeType>(params, 0);
+            root_ = std::make_shared<NodeType>(params_, 0);
 
-            IdxVector examples(n_examples);
-            std::iota( examples.begin(), examples.end(), 0 );
+            IdxVector samples(n_samples);
+            std::iota( samples.begin(), samples.end(), 0 );
 
             // recursively split
-            return root->split(X, Y, examples, sorted_indexes, true);
+            return root_->split(X, Y, samples, sorted_indexes, true);
         }
 
         TargetMatrix transform(const FeatureMatrix &X) {
@@ -67,13 +70,17 @@ namespace eigenml { namespace decision_tree {
             return TargetMatrix();
         }
 
+        const NodeType& root() {
+            return *root_.get();
+        }
+
     private:
 
         // parameters of the tree
-        DecisionTreeParams params;
+        DecisionTreeParams params_;
         
         // Root of the tree
-        std::shared_ptr<NodeType> root;
+        std::shared_ptr<NodeType> root_;
     };
 
     template<class FeatureMatrix, class TargetMatrix>
