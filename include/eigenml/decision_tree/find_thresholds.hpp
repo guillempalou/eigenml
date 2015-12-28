@@ -74,7 +74,7 @@ namespace eigenml { namespace decision_tree {
             histogram[target(examples[i])]++;
 
         // we are only interested in the value in the root
-        double root_cost = entropy(histogram).first;
+        double root_cost = criterion(histogram).first;
 
         Histogram left_histogram;
 

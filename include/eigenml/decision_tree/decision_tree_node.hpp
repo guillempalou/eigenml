@@ -25,7 +25,18 @@ namespace eigenml { namespace decision_tree {
 
     public:
 
-        DecisionTreeNode(const DecisionTreeParams& params, const int& depth) :params(params), depth(depth) {
+        DecisionTreeNode(const DecisionTreeParams& params, const int& depth) : params(params), depth(depth) {
+            LOG_DEBUG << params.criterion;
+            switch(params.criterion) {
+                case SplitCriterion::ENTROPY_CRITERION:
+                    criterion = Criterion(entropy);
+                    break;
+                case SplitCriterion::GINI_CRITERION:
+                    criterion = Criterion(gini);
+                    break;
+                default:
+                    throw core::EigenMLException("Wrong node split criterion");
+            }
         }
 
         bool split(const FeatureMatrix& X, const TargetMatrix& Y, 
@@ -47,10 +58,6 @@ namespace eigenml { namespace decision_tree {
 
             // find the column that best splits the node
             ThresholdSplit best_split = {0, 0, 0, -1e10};
-
-            // TODO move this to the tree level
-            // use functions depending on the output of the tree
-            auto criterion = Criterion(entropy);
 
             for (int c = 0; c < X.cols(); ++c) {
 
@@ -111,6 +118,7 @@ namespace eigenml { namespace decision_tree {
         size_t n_examples;
 
         ThresholdSplit best_split;
+        Criterion criterion;
 
         std::shared_ptr<NodeType> right_child;
         std::shared_ptr<NodeType> left_child;

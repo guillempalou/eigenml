@@ -22,7 +22,7 @@ TEST(ThresholdFinding, Gini) {
     ASSERT_DOUBLE_EQ(v.second, 20);
 }
 
-TEST(ThresholdFinding, Simplethreshold) {
+TEST(ThresholdFinding, SimplethresholdEntropy) {
     size_t N = 2;
     Matrix X(N, 1);
     Vector Y(N);
@@ -37,8 +37,29 @@ TEST(ThresholdFinding, Simplethreshold) {
 
     ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
 
-    ASSERT_EQ(1, split.threshold);
-    ASSERT_EQ(2, split.gain);
+    ASSERT_DOUBLE_EQ(1, split.threshold);
+    ASSERT_DOUBLE_EQ(2, split.gain);
+    ASSERT_EQ(0, split.feature_index);
+    ASSERT_EQ(0, split.threshold_index);
+}
+
+TEST(ThresholdFinding, SimplethresholdGini) {
+    size_t N = 2;
+    Matrix X(N, 1);
+    Vector Y(N);
+
+    X << 1, 2;
+    Y << 0, 1;
+
+    IdxVector idx{0, 1};
+    IdxVector sorted{0, 1};
+
+    auto criterion = Criterion(gini);
+
+    ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
+
+    ASSERT_DOUBLE_EQ(1, split.threshold);
+    ASSERT_DOUBLE_EQ(1, split.gain);
     ASSERT_EQ(0, split.feature_index);
     ASSERT_EQ(0, split.threshold_index);
 }

@@ -34,6 +34,9 @@ int main() {
     // // Declare a tree
     LOG_INFO << "Fitting a tree";
     decision_tree::DecisionTreeParams params;
+
+    params.criterion = decision_tree::SplitCriterion::GINI_CRITERION;
+
     decision_tree::DecisionTree<Matrix, Vector> tree(params);
     tree.fit(X, Y);
 }
