@@ -22,6 +22,13 @@ namespace eigenml {
 
     // sorted X columns by values
     typedef std::vector<size_t> IdxVector;
+
+    // types of model
+    // allows to specialize types of variables using traits
+    enum ModelType {
+        kSupervisedClassifier,
+        kSupervisedRegressor
+    };
 }
 
 

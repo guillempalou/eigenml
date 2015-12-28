@@ -14,10 +14,10 @@
 
 namespace eigenml { namespace decision_tree {
 
-    template<class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
-    class DecisionTree : public core::Model<FeatureMatrix, TargetMatrix> {
+    template<ModelType modelType = ModelType::kSupervisedClassifier, class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
+    class DecisionTree : public core::Model<modelType, FeatureMatrix, TargetMatrix> {
 
-        typedef DecisionTreeNode<FeatureMatrix, TargetMatrix> NodeType;
+        typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
 
         static logging::Logger logger;
 
@@ -83,8 +83,8 @@ namespace eigenml { namespace decision_tree {
         std::shared_ptr<NodeType> root_;
     };
 
-    template<class FeatureMatrix, class TargetMatrix>
-    logging::Logger DecisionTree<FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTree");
+    template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
+    logging::Logger DecisionTree<modelType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTree");
 
 }}
 

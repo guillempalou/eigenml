@@ -37,6 +37,6 @@ int main() {
 
     params.criterion = decision_tree::SplitCriterion::kGiniCriterion;
 
-    decision_tree::DecisionTree<Matrix, Vector> tree(params);
+    decision_tree::DecisionTree<> tree(params);
     tree.fit(X, Y);
 }

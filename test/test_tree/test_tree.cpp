@@ -14,7 +14,7 @@ TEST(DecisionTree, NodeCreation) {
 
     // // Declare a tree
     DecisionTreeParams params;
-    DecisionTree<Matrix, Vector> tree(params);
+    DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
     tree.fit(X, Y); 
 
     auto root = tree.root();
@@ -31,7 +31,7 @@ TEST(DecisionTree, CreationFailure) {
     try {
         DecisionTreeParams params;
         params.criterion = (SplitCriterion)(-1);
-        DecisionTree<Matrix, Vector> tree(params);
+        DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
     }
     catch(const core::WrongParametersException & err) {
         EXPECT_EQ(err.what(), "Wrong parameters : Wrong node split criterion");
@@ -46,7 +46,7 @@ TEST(DecisionTree, FitFailure) {
     // test creating it with wrong parameters
     try {
         DecisionTreeParams params;
-        DecisionTree<Matrix, Vector> tree(params);
+        DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
 
         size_t N = 0;
         Matrix X(N, 1);
@@ -54,7 +54,7 @@ TEST(DecisionTree, FitFailure) {
 
         tree.fit(X, Y);
     }
-    catch(const core::EigenMLException & err) {
+    catch(const core::InsufficientSamplesException & err) {
         EXPECT_EQ(err.what(), std::string("EigenML Exception: Insufficient Samples 0"));
     }
     catch(...) {

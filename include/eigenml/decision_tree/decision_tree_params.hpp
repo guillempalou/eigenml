@@ -20,6 +20,7 @@ namespace eigenml { namespace decision_tree {
         size_t max_depth = kDefaultMaxDepth;
         SplitCriterion criterion = kDefaultCriterion;
         size_t min_samples = kDefaultMinSamples;
+        bool save_distributions;    
     };
 
 }}

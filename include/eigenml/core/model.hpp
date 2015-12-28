@@ -5,7 +5,7 @@
 
 namespace eigenml { namespace core {
 
-    template<class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
+    template<ModelType type, class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
     class Model {
         
         static logging::Logger logger; 
@@ -34,9 +34,10 @@ namespace eigenml { namespace core {
         
     };
 
-    template<class FeatureMatrix, class TargetMatrix>
-    logging::Logger Model<FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("Model");
-    
+    template<ModelType type, class FeatureMatrix, class TargetMatrix>
+    logging::Logger Model<type, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("Model");
+
+
 }}
 
 #endif // MODEL_HPP

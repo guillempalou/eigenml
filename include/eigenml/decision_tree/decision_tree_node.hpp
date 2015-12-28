@@ -14,11 +14,11 @@
 
 namespace eigenml { namespace decision_tree {
 
-    template<class FeatureMatrix, class TargetMatrix> 
+    template<ModelType modelType, class FeatureMatrix, class TargetMatrix> 
     class DecisionTreeNode {
 
         // type of this class
-        typedef DecisionTreeNode<FeatureMatrix, TargetMatrix> NodeType;
+        typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
 
         // logger
         static logging::Logger logger;
@@ -52,6 +52,17 @@ namespace eigenml { namespace decision_tree {
             // find the column that best splits the node
             best_split_ = {0, 0, 0, -1e10};
 
+            // add a bunch of conditions for splitting
+            bool should_split = recurse & 
+                                (params_.max_depth > depth_) &
+                                (params_.min_samples < n_samples_);
+
+            if (should_split == false || params_.save_distributions) {
+
+                if (!should_split)
+                    return false;
+            }
+
             for (int c = 0; c < X.cols(); ++c) {
 
                 LOG_TRACE << "Getting optimal threshold for column " << c; 
@@ -73,13 +84,11 @@ namespace eigenml { namespace decision_tree {
                         << " gain " << best_split_.gain \
                         << " column " << best_split_.feature_index;
 
-            // add a bunch of conditions for splitting
-            bool should_split = recurse & 
-                                (best_split_.gain > 0) & 
-                                (params_.max_depth > depth_) &
-                                (params_.min_samples < n_samples_);
+            
 
             LOG_TRACE << "Will recurse: " << should_split;
+
+            should_split &= best_split_.gain > 0;
 
             // split the node if we should
             if (should_split) {
@@ -131,13 +140,14 @@ namespace eigenml { namespace decision_tree {
 
         ThresholdSplit best_split_;
         Criterion criterion_;
+        // TODO add variables to capture state
 
         std::shared_ptr<NodeType> right_child_;
         std::shared_ptr<NodeType> left_child_;
     };
 
-    template<class FeatureMatrix, class TargetMatrix>
-    logging::Logger DecisionTreeNode<FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTreeNode");
+    template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
+    logging::Logger DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTreeNode");
 
 }}
 
