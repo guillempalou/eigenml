@@ -26,6 +26,9 @@ namespace eigenml { namespace decision_tree {
         // Threshold finder type
         typedef ThresholdFinder<modelType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
 
+        // criterion type
+        typedef typename TreeTraits<modelType, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
+
         // logger
         static logging::Logger logger;
 
@@ -35,13 +38,13 @@ namespace eigenml { namespace decision_tree {
             LOG_DEBUG << params.criterion;
             switch(params.criterion) {
                 case SplitCriterion::kEntropyCriterion:
-                criterion_ = Criterion(entropy<Histogram>);
-                break;
+                    criterion_ = CriterionType(entropy<Histogram>);
+                    break;
                 case SplitCriterion::kGiniCriterion:
-                criterion_ = Criterion(gini<Histogram>);
-                break;
+                    criterion_ = CriterionType(gini<Histogram>);
+                    break;
                 default:
-                throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
+                    throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
             }
         }
 

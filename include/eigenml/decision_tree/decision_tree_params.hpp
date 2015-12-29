@@ -31,12 +31,14 @@ namespace eigenml { namespace decision_tree {
     template<class FeatureMatrix, class TargetMatrix>
     struct TreeTraits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> {
         typedef Histogram DistributionType;
+        typedef std::function<ValueAndWeight(const DistributionType&)> CriterionType;
     };
 
     // if the tree is a regression, we characterize each node by its mean
     template<class FeatureMatrix, class TargetMatrix>
     struct TreeTraits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix> {
         typedef double DistributionType;
+        typedef std::function<ValueAndWeight(double, double, double)> Criterion;
     };
 
 }}

@@ -64,6 +64,8 @@ namespace eigenml { namespace decision_tree {
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
     class ThresholdFinder {
     
+        typedef typename TreeTraits<modelType, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
+
     public:
 
         ThresholdSplit find_classification_threshold(const FeatureMatrix& features, 
@@ -71,7 +73,7 @@ namespace eigenml { namespace decision_tree {
                                                      size_t feature_col,
                                                      const IdxVector& examples,
                                                      const IdxVector& sorted_index, 
-                                                     Criterion& criterion);
+                                                     CriterionType& criterion);
 
         typename TreeTraits<modelType, FeatureMatrix, TargetMatrix>::DistributionType node_distribution();
     };
@@ -80,6 +82,7 @@ namespace eigenml { namespace decision_tree {
     class ThresholdFinder<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> {
 
         typedef typename TreeTraits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
+        typedef typename TreeTraits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
 
     public:
 
@@ -88,7 +91,7 @@ namespace eigenml { namespace decision_tree {
                                                      size_t feature_col,
                                                      const IdxVector& examples,
                                                      const IdxVector& sorted_index, 
-                                                     Criterion& criterion) {
+                                                     CriterionType& criterion) {
 
             size_t n_examples = examples.size();
 
