@@ -35,7 +35,8 @@ TEST(ThresholdFinding, SimplethresholdEntropy) {
 
     auto criterion = Criterion(entropy<Histogram>);
 
-    ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
+    ThresholdFinder<ModelType::kSupervisedClassifier, Matrix, Vector> splitter;
+    ThresholdSplit split = splitter.find_classification_threshold(X, Y, 0, idx, sorted, criterion);
 
     ASSERT_DOUBLE_EQ(1, split.threshold);
     ASSERT_DOUBLE_EQ(2, split.gain);
@@ -56,7 +57,8 @@ TEST(ThresholdFinding, SimplethresholdGini) {
 
     auto criterion = Criterion(gini<Histogram>);
 
-    ThresholdSplit split = find_classification_threshold(X, Y, 0, idx, sorted, criterion);
+    ThresholdFinder<ModelType::kSupervisedClassifier, Matrix, Vector> splitter;
+    ThresholdSplit split = splitter.find_classification_threshold(X, Y, 0, idx, sorted, criterion);
 
     ASSERT_DOUBLE_EQ(1, split.threshold);
     ASSERT_DOUBLE_EQ(1, split.gain);

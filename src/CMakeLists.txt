@@ -5,7 +5,7 @@ add_subdirectory(logging)
 add_subdirectory(core)
 
 # compile the decision tree module
-# add_subdirectory(decision_tree)
+add_subdirectory(decision_tree)
 
 # compile the examples
 add_subdirectory(examples)

@@ -7,7 +7,7 @@ target_link_libraries(test_tree
     ${GTEST_MAIN_LIBRARIES}
     # for now we don't need it ${GMOCK_LIBRARIES}
     eigenml_core
-    eigenml_logging
+    eigenml_decision_tree
 )
 
 # add itself to the tests

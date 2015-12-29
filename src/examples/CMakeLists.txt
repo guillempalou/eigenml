@@ -2,4 +2,4 @@ file(GLOB_RECURSE SRCS *.cpp)
 
 add_executable(main_example ${SRCS})
 
-target_link_libraries(main_example eigenml_core eigenml_logging)
+target_link_libraries(main_example eigenml_core eigenml_decision_tree)

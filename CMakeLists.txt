@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 # set some global options
 set(BOOST_VERSION 1.59.0)
 set(optimization "-O2")
-set(warnings "-Wall -Wextra -Werror")
+set(warnings "-Wall -Wextra") # introduce -Werror for release build
 set(c_11 "-g -std=c++11 -pedantic")
 set(CMAKE_CXX_FLAGS "${opimization} ${warnings} ${c_11}")
 

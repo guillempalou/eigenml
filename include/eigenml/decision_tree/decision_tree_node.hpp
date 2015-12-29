@@ -20,6 +20,12 @@ namespace eigenml { namespace decision_tree {
         // type of this class
         typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
 
+        // distribution on each node
+        typedef typename TreeTraits<modelType, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
+
+        // Threshold finder type
+        typedef ThresholdFinder<modelType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
+
         // logger
         static logging::Logger logger;
 
@@ -29,19 +35,19 @@ namespace eigenml { namespace decision_tree {
             LOG_DEBUG << params.criterion;
             switch(params.criterion) {
                 case SplitCriterion::kEntropyCriterion:
-                    criterion_ = Criterion(entropy<Histogram>);
-                    break;
+                criterion_ = Criterion(entropy<Histogram>);
+                break;
                 case SplitCriterion::kGiniCriterion:
-                    criterion_ = Criterion(gini<Histogram>);
-                    break;
+                criterion_ = Criterion(gini<Histogram>);
+                break;
                 default:
-                    throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
+                throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
             }
         }
 
         bool split(const FeatureMatrix& X, const TargetMatrix& Y, 
-                   IdxVector samples,
-                   std::vector<IdxVector> sorted_indexes, // TODO add subset of features
+                   const IdxVector& samples,
+                   const std::vector<IdxVector>& sorted_indexes, // TODO add subset of features
                    bool recurse) {
 
             n_samples_ = samples.size();
@@ -54,8 +60,8 @@ namespace eigenml { namespace decision_tree {
 
             // add a bunch of conditions for splitting
             bool should_split = recurse & 
-                                (params_.max_depth > depth_) &
-                                (params_.min_samples < n_samples_);
+            (params_.max_depth > depth_) &
+            (params_.min_samples < n_samples_);
 
             if (should_split == false || params_.save_distributions) {
 
@@ -63,17 +69,19 @@ namespace eigenml { namespace decision_tree {
                     return false;
             }
 
+            ThresholdFinderType splitter;
+
             for (int c = 0; c < X.cols(); ++c) {
 
                 LOG_TRACE << "Getting optimal threshold for column " << c; 
                 // find the optimal threshold on the examples we have
-                ThresholdSplit split = find_classification_threshold(X.col(c), Y, c,
-                                                                     samples,
-                                                                     sorted_indexes[c],
-                                                                     criterion_);
+                ThresholdSplit split = splitter.find_classification_threshold(X.col(c), Y, c,
+                                                                              samples,
+                                                                              sorted_indexes[c],
+                                                                              criterion_);
 
                 LOG_TRACE << "Threshold at " << split.threshold << " gain " \
-                              << split.gain << " column " << split.feature_index;
+                << split.gain << " column " << split.feature_index;
 
                 if (best_split_ < split) {
                     best_split_ = split;
@@ -81,14 +89,16 @@ namespace eigenml { namespace decision_tree {
             }
 
             LOG_DEBUG << "Optimal threshold at " << best_split_.threshold \
-                        << " gain " << best_split_.gain \
-                        << " column " << best_split_.feature_index;
-
-            
+            << " gain " << best_split_.gain \
+            << " column " << best_split_.feature_index;
 
             LOG_TRACE << "Will recurse: " << should_split;
 
             should_split &= best_split_.gain > 0;
+
+            // capture node distribution
+            if (params_.save_distributions || should_split == false)
+                distribution_  = splitter.node_distribution();
 
             // split the node if we should
             if (should_split) {
@@ -140,7 +150,8 @@ namespace eigenml { namespace decision_tree {
 
         ThresholdSplit best_split_;
         Criterion criterion_;
-        // TODO add variables to capture state
+
+        DistributionType distribution_;
 
         std::shared_ptr<NodeType> right_child_;
         std::shared_ptr<NodeType> left_child_;
