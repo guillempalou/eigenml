@@ -11,8 +11,11 @@
 
 #include <eigenml/decision_tree/decision_tree_params.hpp>
 #include <eigenml/decision_tree/find_thresholds.hpp>
+#include <eigenml/decision_tree/criteria.hpp>
 
 namespace eigenml { namespace decision_tree {
+
+
 
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix> 
     class DecisionTreeNode {
@@ -29,23 +32,17 @@ namespace eigenml { namespace decision_tree {
         // criterion type
         typedef typename TreeTraits<modelType, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
 
+        // creation of criteria
+        typedef CriterionCreator<modelType, FeatureMatrix, TargetMatrix> CriterionCreatorType;
+
         // logger
         static logging::Logger logger;
 
     public:
 
         DecisionTreeNode(const DecisionTreeParams& params, const int& depth) : params_(params), depth_(depth) {
-            LOG_DEBUG << params.criterion;
-            switch(params.criterion) {
-                case SplitCriterion::kEntropyCriterion:
-                    criterion_ = CriterionType(entropy<Histogram>);
-                    break;
-                case SplitCriterion::kGiniCriterion:
-                    criterion_ = CriterionType(gini<Histogram>);
-                    break;
-                default:
-                    throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
-            }
+            LOG_DEBUG << "Criterion for creating the tree " << params.criterion;
+            criterion_ = CriterionCreatorType::create_criterion_function(params.criterion);
         }
 
         bool split(const FeatureMatrix& X, const TargetMatrix& Y, 
@@ -152,7 +149,7 @@ namespace eigenml { namespace decision_tree {
         size_t n_samples_;
 
         ThresholdSplit best_split_;
-        Criterion criterion_;
+        CriterionType criterion_;
 
         DistributionType distribution_;
 
@@ -162,7 +159,6 @@ namespace eigenml { namespace decision_tree {
 
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
     logging::Logger DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTreeNode");
-
 }}
 
 #endif

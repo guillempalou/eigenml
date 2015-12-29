@@ -155,6 +155,6 @@ namespace eigenml { namespace decision_tree {
 
     };
 
-} }
+}}
 
 #endif // FIND_THRESHOLDS_HPP
