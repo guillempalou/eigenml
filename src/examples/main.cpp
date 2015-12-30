@@ -10,18 +10,18 @@ using namespace eigenml;
 
 int main() {
 
-    logging::init_cerr_log(logging::severity_level::trace);
+    logging::init_cerr_log(logging::severity_level::info);
 
     logging::Logger logger("MAIN");
 
     std::srand((unsigned int) time(0));
 
-    size_t N = 10;
-    Matrix X = Matrix::Random(N, 3);
-    Matrix c = Matrix::Random(3, 1);
+    size_t N = 100000;
+    Matrix X = Matrix::Random(N, 10);
+    Matrix c = Matrix::Random(10, 1);
     Vector Y(N);
 
-    c << -1, 2, 1;
+    c << -1, 2, 1, 1, 2, -1, -2, 1, 1, 1;
     Y = ((X * c).array() < 0).cast<double>();
 
     Vector I(X.rows());

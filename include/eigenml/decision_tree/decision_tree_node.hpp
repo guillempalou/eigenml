@@ -15,8 +15,6 @@
 
 namespace eigenml { namespace decision_tree {
 
-
-
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix> 
     class DecisionTreeNode {
 
@@ -156,6 +154,7 @@ namespace eigenml { namespace decision_tree {
         std::shared_ptr<NodeType> right_child_;
         std::shared_ptr<NodeType> left_child_;
     };
+
 
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
     logging::Logger DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("DecisionTreeNode");

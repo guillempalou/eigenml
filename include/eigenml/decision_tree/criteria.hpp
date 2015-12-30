@@ -1,6 +1,43 @@
-
+#include <eigenml/core/eigenml.hpp>
 
 namespace eigenml { namespace decision_tree {
+
+    template<class Hist>
+    ValueAndWeight entropy(const Hist& histogram) {
+        double n = 0;
+            // count elements on the histogram
+        for (auto& e: histogram)
+            n+=e.second;
+        if (n == 0) 
+            return ValueAndWeight(0, 0);
+        double ent = 0;
+        for (auto& e: histogram) {
+            double p = e.second*1.0/n;
+            ent += (p != 0) ? -p*std::log2(p) : 0;
+        }
+        return ValueAndWeight(ent, n);
+    }
+
+    template<class Hist>
+    ValueAndWeight gini(const Hist& histogram) {
+        double n = 0;
+        for (auto& e: histogram)
+            n+=e.second;
+        if (n == 0)
+            return ValueAndWeight(0, 0);
+        double gini = 0;
+        for (auto& e: histogram) {
+            double p = e.second*1.0/n;
+            gini += p*(1-p);
+        }
+        return ValueAndWeight(gini, n);
+    }
+
+    template<typename T>
+    ValueAndWeight mse(const T& mu_x2, const T& mu_x, const T& weight) {
+        return ValueAndWeight(mu_x2 - mu_x*mu_x, weight);
+    }
+
 
     // specialization for criteria
     // one for classification, one for regression
