@@ -18,6 +18,9 @@ namespace eigenml { namespace decision_tree {
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix> 
     class DecisionTreeNode {
 
+        // type of an example
+        typedef typename FeatureMatrix::RowXpr SampleType;
+
         // type of this class
         typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
 
@@ -121,6 +124,17 @@ namespace eigenml { namespace decision_tree {
             }
             
             return false;
+        }
+
+        double predict(const SampleType& sample) {
+            if (right_child_.get() == nullptr) {
+                return best_split_.decision;
+            } else {
+                if (best_split_.is_right(sample) == false)
+                    return right_child_->predict(sample);
+                else 
+                    return left_child_->predict(sample);
+            }
         }
 
         size_t depth() {

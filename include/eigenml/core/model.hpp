@@ -21,7 +21,7 @@ namespace eigenml { namespace core {
         
         // method to transform the input to the output
         virtual TargetMatrix transform(const FeatureMatrix &X) = 0;
-        
+
         // TODO improve the error handling?
         TargetMatrix fit_transform(const FeatureMatrix& X, const TargetMatrix& Y = nullptr) {
             bool fitted = fit(X, Y);

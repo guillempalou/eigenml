@@ -66,9 +66,11 @@ namespace eigenml { namespace decision_tree {
         }
 
         TargetMatrix transform(const FeatureMatrix &X) {
-            X.sum();
-            return TargetMatrix();
-        }
+            TargetMatrix R(X.rows());
+            for (int i = 0; i < X.rows(); i++)
+                R(i) = root_.predict(X.row(i));
+            return R;
+        } 
 
         const NodeType& root() {
             return *root_.get();

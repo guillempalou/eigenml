@@ -16,6 +16,15 @@ namespace eigenml { namespace decision_tree {
         double threshold;
         double gain;    
 
+        double decision;
+
+        template<typename T>
+        bool is_right(const T& sample) {
+            if (sample(feature_index) > threshold)
+                return true;
+            return false;
+        } 
+
         bool operator<(const ThresholdSplit& other) {
             return gain < other.gain;
         }
@@ -67,8 +76,17 @@ namespace eigenml { namespace decision_tree {
 
             // order the targets and compute a global histogram 
             DistributionType histogram;
-            for (size_t i = 0; i < n_examples; ++i)
+
+            // gets the class with maximum representation
+            double max_class = 0;
+            double n_max_class = 0;
+            for (size_t i = 0; i < n_examples; ++i) {
                 histogram[target(examples[i])]++;
+                if (n_max_class < histogram[target(examples[i])]) {
+                    n_max_class = histogram[target(examples[i])];
+                    max_class = target(examples[i]);
+                }
+            }
 
             distribution_ = histogram;
 
@@ -184,7 +202,7 @@ namespace eigenml { namespace decision_tree {
                 }
             }
 
-            ThresholdSplit split = {feature_col, best_index, best_threshold, best_gain};
+            ThresholdSplit split = {feature_col, best_index, best_threshold, best_gain, max_class};
             return split;
         }
 
