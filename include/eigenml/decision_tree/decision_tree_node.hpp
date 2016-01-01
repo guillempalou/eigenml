@@ -20,6 +20,7 @@ namespace eigenml { namespace decision_tree {
 
         // type of an example
         typedef typename FeatureMatrix::RowXpr SampleType;
+        typedef typename FeatureMatrix::ConstRowXpr ConstSampleType;
 
         // type of this class
         typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
@@ -63,6 +64,19 @@ namespace eigenml { namespace decision_tree {
             bool should_split = recurse & 
             (params_.max_depth > depth_) &
             (params_.min_samples < n_samples_);
+
+            Histogram histogram;
+            double max_class = 0;
+            double n_max_class = 0;
+            for (size_t i = 0; i < n_samples_; ++i) {
+                histogram[Y(samples[i])]++;
+                if (n_max_class < histogram[Y(samples[i])]) {
+                    n_max_class = histogram[Y(samples[i])];
+                    max_class = Y(samples[i]);
+                }
+            }
+            LOG_DEBUG << "Max Class in node: " << max_class << " with " << n_max_class << " samples";
+            decision_ = max_class;
 
             if (should_split == false || params_.save_distributions) {
 
@@ -126,14 +140,14 @@ namespace eigenml { namespace decision_tree {
             return false;
         }
 
-        double predict(const SampleType& sample) {
+        double predict(const ConstSampleType& sample) {
             if (right_child_.get() == nullptr) {
-                return best_split_.decision;
+                return decision_;
             } else {
-                if (best_split_.is_right(sample) == false)
-                    return right_child_->predict(sample);
+                if (best_split_.is_right(sample) == true)
+                    return right_child_.get()->predict(sample);
                 else 
-                    return left_child_->predict(sample);
+                    return left_child_.get()->predict(sample);
             }
         }
 
@@ -162,6 +176,8 @@ namespace eigenml { namespace decision_tree {
 
         ThresholdSplit best_split_;
         CriterionType criterion_;
+
+        double decision_;
 
         DistributionType distribution_;
 

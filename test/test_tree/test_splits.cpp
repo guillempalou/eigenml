@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <eigenml/decision_tree/find_thresholds.hpp>
+#include <eigenml/decision_tree/criteria.hpp>
 
 using namespace eigenml;
 using namespace eigenml::decision_tree;

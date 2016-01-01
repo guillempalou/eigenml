@@ -25,6 +25,25 @@ TEST(DecisionTree, NodeCreation) {
     ASSERT_EQ(1, right.n_samples());
 }
 
+TEST(DecisionTree, SimpleFitTransform) {
+    size_t N = 10;
+    Matrix X(N, 1);
+    Vector Y(N);
+
+    X << 0, 1, 2, 3, 4, 5, 6, 7, 8, 9; 
+    Y << 0, 0, 0, 0, 0, 1, 1, 1, 1, 1;
+
+    // // Declare a tree
+    DecisionTreeParams params;
+    params.max_depth = 1;
+
+    DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
+    tree.fit(X, Y); 
+    
+    ASSERT_EQ(Y, tree.transform(X));
+}
+
+
 TEST(DecisionTree, CreationFailure) {
 
     // test creating it with wrong parameters
