@@ -1,5 +1,5 @@
-file(GLOB_RECURSE SRCS *.cpp)
+add_executable(tree_class_example main_tree.cpp)
+add_executable(tree_regressor_example main_tree_regressor.cpp)
 
-add_executable(main_example ${SRCS})
-
-target_link_libraries(main_example eigenml_core eigenml_decision_tree)
+target_link_libraries(tree_class_example eigenml_core eigenml_decision_tree)
+target_link_libraries(tree_regressor_example eigenml_core eigenml_decision_tree)

@@ -51,14 +51,15 @@ namespace eigenml { namespace decision_tree {
     struct CriterionCreator<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> {
         
         typedef typename TreeTraits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
+        typedef typename TreeTraits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
 
         static CriterionType create_criterion_function(SplitCriterion criterion) {
             CriterionType function;
             switch(criterion) {
                 case SplitCriterion::kEntropyCriterion:
-                    return CriterionType(entropy<Histogram>);
+                    return CriterionType(entropy<DistributionType>);
                 case SplitCriterion::kGiniCriterion:
-                    return CriterionType(gini<Histogram>);
+                    return CriterionType(gini<DistributionType>);
                 default:
                     throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
             }
@@ -69,12 +70,13 @@ namespace eigenml { namespace decision_tree {
     struct CriterionCreator<kSupervisedRegressor, FeatureMatrix, TargetMatrix> {
 
         typedef typename TreeTraits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
+        typedef typename TreeTraits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
         
         static CriterionType create_criterion_function(SplitCriterion criterion) {
             CriterionType function;
             switch(criterion) {
                 case SplitCriterion::kMSECriterion:
-                    return CriterionType(entropy<Histogram>);
+                    return CriterionType(mse<DistributionType>);
                 default:
                     throw core::WrongParametersException(core::ExceptionMessage::kWrongSplitCriterionException);
             }

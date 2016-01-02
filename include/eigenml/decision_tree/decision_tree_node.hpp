@@ -65,6 +65,8 @@ namespace eigenml { namespace decision_tree {
             (params_.max_depth > depth_) &
             (params_.min_samples < n_samples_);
 
+            // move this to an external class
+            // Get a BaseTreeNode 
             Histogram histogram;
             double max_class = 0;
             double n_max_class = 0;

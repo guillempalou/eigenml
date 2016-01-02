@@ -39,6 +39,24 @@ TEST(DecisionTree, SimpleFitTransform) {
 
     DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
     tree.fit(X, Y); 
+
+    ASSERT_EQ(Y, tree.transform(X));
+}
+
+TEST(DecisionTree, FitTransform3Classes) {
+    size_t N = 15;
+    Matrix X(N, 1);
+    Vector Y(N);
+
+    X << 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14; 
+    Y << 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2;
+
+    // // Declare a tree
+    DecisionTreeParams params;
+    params.max_depth = 2;
+
+    DecisionTree<ModelType::kSupervisedClassifier, Matrix, Vector> tree(params);
+    tree.fit(X, Y); 
     
     ASSERT_EQ(Y, tree.transform(X));
 }

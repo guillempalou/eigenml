@@ -38,7 +38,7 @@ namespace eigenml { namespace decision_tree {
     template<class FeatureMatrix, class TargetMatrix>
     struct TreeTraits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix> {
         typedef double DistributionType;
-        typedef std::function<ValueAndWeight(double, double, double)> Criterion;
+        typedef std::function<ValueAndWeight(const double&, const double&, const double&)> CriterionType;
     };
 
 }}

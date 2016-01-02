@@ -31,7 +31,7 @@ namespace eigenml { namespace core {
                 return TargetMatrix();
             }
         }
-        
+    
     };
 
     template<ModelType type, class FeatureMatrix, class TargetMatrix>
