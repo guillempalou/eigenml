@@ -3,7 +3,7 @@
 
 #include <eigenml/core/eigenml.hpp>
 
-namespace eigenml { namespace core {
+namespace eigenml { 
 
     template<ModelType type, class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
     class Model {
@@ -38,6 +38,6 @@ namespace eigenml { namespace core {
     logging::Logger Model<type, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("Model");
 
 
-}}
+}
 
 #endif // MODEL_HPP

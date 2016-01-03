@@ -6,18 +6,18 @@
 
 #include <eigenml/core/model.hpp>
 #include <eigenml/core/vectors/sorting.hpp>
+#include <eigenml/logging/logging.hpp>
 
 #include <eigenml/decision_tree/decision_tree_params.hpp>
-#include <eigenml/decision_tree/decision_tree_node.hpp>
-
-#include <eigenml/logging/logging.hpp>
+#include <eigenml/decision_tree/decision_tree_traits.hpp>
 
 namespace eigenml { namespace decision_tree {
 
     template<ModelType modelType = ModelType::kSupervisedClassifier, class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
-    class DecisionTree : public core::Model<modelType, FeatureMatrix, TargetMatrix> {
+    class DecisionTree : public Model<modelType, FeatureMatrix, TargetMatrix> {
 
-        typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
+        typedef tree_traits<modelType, FeatureMatrix, TargetMatrix> tree_traits_type;
+        typedef typename tree_traits_type::NodeType NodeType;
 
         static logging::Logger logger;
 

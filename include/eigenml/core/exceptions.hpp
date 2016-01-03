@@ -9,6 +9,7 @@ namespace eigenml { namespace core {
     // enums defining exception arguments
     struct ExceptionMessage {
         static const std::string kGeneralException;
+        static const std::string kMethodNotImplementedException;
         static const std::string kWrongParametersException;
         static const std::string kInsufficientSamplesException;
         static const std::string kWrongSplitCriterionException;
@@ -30,12 +31,21 @@ namespace eigenml { namespace core {
         std::string name_;
     };
 
+    class MethodNotImplementedException : public EigenMLException {
+
+    public:
+
+        MethodNotImplementedException(std::string msg) : 
+            EigenMLException(ExceptionMessage::kMethodNotImplementedException + ": " + msg) {
+        }
+    };
+
     class WrongParametersException : public EigenMLException {
 
     public:
 
         WrongParametersException(std::string msg) : 
-            EigenMLException(msg + " " + ExceptionMessage::kWrongSplitCriterionException) {
+            EigenMLException(ExceptionMessage::kWrongSplitCriterionException + ": " + msg) {
         }
     };
 
