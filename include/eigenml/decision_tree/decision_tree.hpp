@@ -16,14 +16,33 @@ namespace eigenml { namespace decision_tree {
     template<ModelType modelType = ModelType::kSupervisedClassifier, class FeatureMatrix = Matrix, class TargetMatrix = Matrix> 
     class DecisionTree : public Model<modelType, FeatureMatrix, TargetMatrix> {
 
+        // traits type
         typedef tree_traits<modelType, FeatureMatrix, TargetMatrix> tree_traits_type;
+
+        // node of the trees
         typedef typename tree_traits_type::NodeType NodeType;
 
+        // criterion function
+        typedef typename tree_traits_type::CriterionType CriterionType;
+
+        // distribution type
+        typedef typename tree_traits_type::DistributionType DistributionType;
+
+        // criterion creator
+        typedef CriterionCreator<modelType, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> CriterionCreatorType;
+
+        // splitter for the nodes
+        typedef ThresholdFinder<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
+
+        // logger
         static logging::Logger logger;
 
     public:
 
         DecisionTree(const DecisionTreeParams& params = DecisionTreeParams())  : params_(params) {
+            LOG_DEBUG << "Criterion for creating the tree " << params.criterion;
+            criterion_ = CriterionCreatorType::create_criterion_function(params.criterion);
+            threshold_finder_ = ThresholdFinderType();
         }
 
         ~DecisionTree() {
@@ -56,7 +75,7 @@ namespace eigenml { namespace decision_tree {
             }
 
             LOG_INFO << "Creating tree";
-            root_ = std::make_shared<NodeType>(params_, 0);
+            root_ = std::make_shared<NodeType>(params_, 0, threshold_finder_, criterion_);
 
             IdxVector samples(n_samples);
             std::iota( samples.begin(), samples.end(), 0 );
@@ -83,6 +102,12 @@ namespace eigenml { namespace decision_tree {
         
         // Root of the tree
         std::shared_ptr<NodeType> root_;
+
+        // threshold finder
+        ThresholdFinderType threshold_finder_;
+
+        // Criterion 
+        CriterionType criterion_;
     };
 
     template<ModelType modelType, class FeatureMatrix, class TargetMatrix>

@@ -26,14 +26,20 @@ namespace eigenml { namespace decision_tree{
         typedef model_traits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> model_traits_type;
         typedef typename model_traits_type::FeatureScalarType ScalarType;
 
-        // node type
-        typedef ClassificationTreeNode<FeatureMatrix, TargetMatrix> NodeType;
-
         // distribution of the nodes
         typedef DiscreteDistribution<ScalarType> DistributionType;
 
         // criteria function type for splitting nodes
         typedef std::function<ValueAndWeight(const DistributionType&)> CriterionType;
+
+        // Class type to find the optimal split
+        //typedef ThresholdFinder<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
+
+        // creation of criteria
+        //typedef CriterionCreator<ModelType::kSupervisedClassifier, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> CriterionCreatorType;
+
+        // node type
+        typedef ClassificationTreeNode<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> NodeType;
     };
 
     // if the tree is a regression, we characterize each node by its mean
@@ -41,17 +47,23 @@ namespace eigenml { namespace decision_tree{
     struct tree_traits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix> {
         
         // get types from the model traits
-        typedef core::model_traits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> model_traits_type;
+        typedef model_traits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix> model_traits_type;
         typedef typename model_traits_type::FeatureScalarType ScalarType;
-
-        // node type
-        typedef RegreessionTreeNode<FeatureMatrix, TargetMatrix> NodeType;
 
         // distribution of the nodes
         typedef ContinuousDistribution<ScalarType> DistributionType;
 
         // criteria function type for splitting nodes
         typedef std::function<ValueAndWeight(const DistributionType&)> CriterionType;
+
+        // node type
+        typedef RegressionTreeNode<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> NodeType;
+
+        // Class type to find the optimal split
+        //typedef ThresholdFinder<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
+
+        // creation of criteria
+        //typedef CriterionCreator<ModelType::kSupervisedRegressor, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> CriterionCreatorType;
     };
 
 }}

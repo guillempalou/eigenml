@@ -8,22 +8,22 @@ namespace eigenml { namespace decision_tree{
     template<typename T>
     class ContinuousDistribution : public BaseDistribution<T> {
 
-        typedef BaseDistribution<T> BaseDistributionType;
+        typedef BaseDistribution<T> BaseType;
 
     public:
         
         void add_sample(const T& target_value, const double weight) {
-            update_moments(target_value, weight);
+            BaseType::update_moments(target_value, weight);
         }
 
         void remove_sample(const T& target_value, const double weight) {
-            update_moments(target_value, -weight);
+            BaseType::update_moments(target_value, -weight);
         }
 
         // function for predicting 
         template <typename U>
         const T prediction(const U& sample) {
-            return BaseDistributionType::mean_;
+            return BaseType::mean_;
         }
 
     protected:

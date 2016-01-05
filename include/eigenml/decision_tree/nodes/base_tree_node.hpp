@@ -10,46 +10,38 @@
 #include <eigenml/core/eigenml.hpp>
 
 #include <eigenml/decision_tree/decision_tree_params.hpp>
-
 #include <eigenml/decision_tree/splitting/find_thresholds.hpp>
 #include <eigenml/decision_tree/splitting/criterion_creator.hpp>
 
 namespace eigenml { namespace decision_tree{
 
-    template<ModelType modelType, class FeatureMatrix, class TargetMatrix> 
+    // TODO think about traits only having Node, Criterion and Distribution
+
+    template<ModelType modelType, class DistributionType, class CriterionType, class FeatureMatrix, class TargetMatrix> 
     class BaseTreeNode {
 
         // type of this class
-        typedef DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix> NodeType;
+        typedef BaseTreeNode<modelType, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> NodeType;
+
+        // type of threshold finder
+        typedef ThresholdFinder<DistributionType, CriterionType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
 
         // traits types
         typedef model_traits<modelType, FeatureMatrix, TargetMatrix> model_traits_type;
-        typedef tree_traits<modelType, FeatureMatrix, TargetMatrix> tree_traits_type;
 
         // type of an example
         typedef typename model_traits_type::SampleType SampleType;
         typedef typename model_traits_type::ConstSampleType ConstSampleType;
-
-        // distribution on each node
-        typedef typename tree_traits_type::DistributionType DistributionType;
-
-        // criterion type
-        typedef typename tree_traits_type::CriterionType CriterionType;
-
-        // Threshold finder type
-        typedef ThresholdFinder<modelType, FeatureMatrix, TargetMatrix> ThresholdFinderType;
-
-        // creation of criteria
-        typedef CriterionCreator<modelType, FeatureMatrix, TargetMatrix> CriterionCreatorType;
 
         // logger
         static logging::Logger logger;
 
     public:
 
-        DecisionTreeNode(const DecisionTreeParams& params, const int& depth) : params_(params), depth_(depth) {
-            LOG_DEBUG << "Criterion for creating the tree " << params.criterion;
-            criterion_ = CriterionCreatorType::create_criterion_function(params.criterion);
+        BaseTreeNode(const DecisionTreeParams& params, 
+                     const int& depth, 
+                     const ThresholdFinderType& finder,
+                     CriterionType& criterion) : params_(params), depth_(depth), finder_(finder), criterion_(criterion) {
         }
 
         bool split(const FeatureMatrix& X, const TargetMatrix& Y, 
@@ -74,19 +66,16 @@ namespace eigenml { namespace decision_tree{
             if (!should_split)
                 return false;
 
-            ThresholdFinderType splitter;
-
             for (int c = 0; c < X.cols(); ++c) {
 
                 LOG_TRACE << "Getting optimal threshold for column " << c; 
                 // find the optimal threshold on the examples we have
-                ThresholdSplit split = splitter.find_classification_threshold(X.col(c), Y, c,
-                                                                              samples,
-                                                                              sorted_indexes[c],
-                                                                              criterion_);
+                ThresholdSplit split = finder_.find_threshold(X.col(c), Y, c,
+                                                              samples,
+                                                              sorted_indexes[c],
+                                                              criterion_);
 
-                LOG_TRACE << "Threshold at " << split.threshold << " gain " \
-                << split.gain << " column " << split.feature_index;
+                LOG_TRACE << "Threshold at " << split.threshold << " gain " << split.gain << " column " << split.feature_index;
 
                 if (best_split_ < split) 
                     best_split_ = split;
@@ -96,12 +85,13 @@ namespace eigenml { namespace decision_tree{
             << " gain " << best_split_.gain \
             << " column " << best_split_.feature_index;
 
-            LOG_TRACE << "Will recurse: " << best_split_.gain > 0;
+            LOG_TRACE << "Will recurse: " << (best_split_.gain > 0);
 
             // split the node if we should
             if (best_split_.gain > 0) {
-                left_child_ = std::make_shared<NodeType>(params_, depth_+1);
-                right_child_ = std::make_shared<NodeType>(params_, depth_+1);
+
+                left_child_ = std::make_shared<NodeType>(params_, depth_+1, finder_, criterion_);
+                right_child_ = std::make_shared<NodeType>(params_, depth_+1, finder_, criterion_);
 
                 // get the examples based on feature threshold
                 IdxVector left_samples;
@@ -153,15 +143,15 @@ namespace eigenml { namespace decision_tree{
     protected:
 
         const DecisionTreeParams& params_;
-        
+
         size_t depth_;
+
+        const ThresholdFinderType& finder_;
+        CriterionType& criterion_;
+
         size_t n_samples_;
 
         ThresholdSplit best_split_;
-        CriterionType criterion_;
-
-        double decision_;
-
         DistributionType distribution_;
 
         std::shared_ptr<NodeType> right_child_;
@@ -169,8 +159,8 @@ namespace eigenml { namespace decision_tree{
     };
 
 
-    template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
-    logging::Logger DecisionTreeNode<modelType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("BaseTreeNode");
+    template<ModelType modelType, class DistributionType, class CriterionType, class FeatureMatrix, class TargetMatrix>
+    logging::Logger BaseTreeNode<modelType, DistributionType, CriterionType, FeatureMatrix, TargetMatrix>::logger = logging::setNameAttribute("BaseTreeNode");
     
 }}
 

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <eigenml/decision_tree/discrete_distribution.hpp>
-#include <eigenml/decision_tree/continous_distribution.hpp>
+#include <eigenml/decision_tree/distributions/discrete_distribution.hpp>
+#include <eigenml/decision_tree/distributions/continuous_distribution.hpp>
 
 using namespace eigenml;
 using namespace eigenml::decision_tree;

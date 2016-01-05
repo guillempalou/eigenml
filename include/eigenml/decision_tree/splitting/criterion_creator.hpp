@@ -1,23 +1,17 @@
 #include <eigenml/core/eigenml.hpp>
-
-#include <eigenml/decision_tree/decision_tree_traits.hpp>
 #include <eigenml/decision_tree/splitting/criteria.hpp>
 
 namespace eigenml { namespace decision_tree{
     
     // specialization for criteria
     // one for classification, one for regression
-    template<ModelType modelType, class FeatureMatrix, class TargetMatrix>
+    template<ModelType modelType, class DistributionType, class CriterionType, class FeatureMatrix, class TargetMatrix>
     struct CriterionCreator {
-        typedef tree_traits<modelType, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
         static CriterionType create_criterion_function(SplitCriterion criterion);
     };
 
-    template<class FeatureMatrix, class TargetMatrix>
-    struct CriterionCreator<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix> {
-        
-        typedef typename tree_traits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
-        typedef typename tree_traits<ModelType::kSupervisedClassifier, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
+    template<typename DistributionType, class CriterionType, class FeatureMatrix, class TargetMatrix>
+    struct CriterionCreator<ModelType::kSupervisedClassifier, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> {
 
         static CriterionType create_criterion_function(SplitCriterion criterion) {
             CriterionType function;
@@ -32,11 +26,8 @@ namespace eigenml { namespace decision_tree{
         }
     };
 
-    template<class FeatureMatrix, class TargetMatrix>
-    struct CriterionCreator<kSupervisedRegressor, FeatureMatrix, TargetMatrix> {
-
-        typedef typename tree_traits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix>::CriterionType CriterionType;
-        typedef typename tree_traits<ModelType::kSupervisedRegressor, FeatureMatrix, TargetMatrix>::DistributionType DistributionType;
+    template<typename DistributionType, class CriterionType, class FeatureMatrix, class TargetMatrix>
+    struct CriterionCreator<kSupervisedRegressor, DistributionType, CriterionType, FeatureMatrix, TargetMatrix> {
         
         static CriterionType create_criterion_function(SplitCriterion criterion) {
             CriterionType function;

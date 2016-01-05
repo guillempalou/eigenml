@@ -2,7 +2,6 @@
 #define CRITERIA_HPP
 
 #include <eigenml/core/eigenml.hpp>
-#include <eigenml/decision_tree/decision_tree_traits.hpp>
 
 namespace eigenml { namespace decision_tree {
 

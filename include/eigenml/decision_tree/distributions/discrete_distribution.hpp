@@ -6,13 +6,15 @@ namespace eigenml { namespace decision_tree{
 
         typedef BaseDistribution<T> BaseType;
 
-        typedef std::map<T, double> HistogramType;
-
     public:
+
+        typedef std::map<T, double> HistogramType;
         
+    public:
+
         void add_sample(const T& target_value, const double weight) {
             histogram_[target_value]+=weight;
-            update_moments(target_value, weight);
+            BaseType::update_moments(target_value, weight);
             update_prediction(target_value, weight);
         }
 
@@ -20,7 +22,7 @@ namespace eigenml { namespace decision_tree{
             histogram_[target_value]-=weight;
             // TODO check histogram value asserting positivity
             // update moments with the negative weight to remove
-            update_moments(target_value, -weight);
+            BaseType::update_moments(target_value, -weight);
             update_prediction(target_value, -weight);
         }   
 
