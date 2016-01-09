@@ -60,8 +60,11 @@ namespace eigenml { namespace decision_tree{
             // add a bunch of conditions for splitting
             bool should_split = recurse &  (params_.max_depth > depth_) & (params_.min_samples < n_samples_);
 
-            for (size_t i = 0; i < n_samples_; ++i)
+            LOG_TRACE << "Adding " << n_samples_ << " samples on node";
+            for (size_t i = 0; i < n_samples_; ++i) {
                 distribution_.add_sample(Y(samples[i]), 1); // TODO add weight
+            }
+            LOG_TRACE << "Node mean " << distribution_.mean();
 
             if (!should_split)
                 return false;

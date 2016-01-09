@@ -23,7 +23,7 @@ int main() {
     Vector Y(N);
 
     c << 1;
-    Y = (X.array()*X.array()).matrix();
+    Y = (X.array()).matrix();
 
     Vector I(X.rows());
     Matrix XY(X.rows(), I.cols() + X.cols()+Y.cols());
@@ -36,7 +36,7 @@ int main() {
     LOG_INFO << "Fitting a tree";
     decision_tree::DecisionTreeParams params;
 
-    params.max_depth = 2;
+    params.max_depth = 3;
     params.criterion = decision_tree::SplitCriterion::kMSECriterion;
 
     decision_tree::DecisionTree<ModelType::kSupervisedRegressor> tree(params);

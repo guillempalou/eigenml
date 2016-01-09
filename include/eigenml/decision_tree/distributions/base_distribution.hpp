@@ -56,11 +56,11 @@ namespace eigenml { namespace decision_tree{
             m2_ = sum2_ / total_weight_;
         }
 
-        T mean_;
-        T m2_;
-        T sum_;
-        T sum2_;
-        T total_weight_;
+        T mean_ = 0;
+        T m2_ = 0;
+        T sum_ = 0;
+        T sum2_ = 0;
+        T total_weight_ = 0;
     };
 
 }}
