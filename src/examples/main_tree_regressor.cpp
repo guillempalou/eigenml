@@ -10,13 +10,13 @@ using namespace eigenml;
 
 int main() {
 
-    logging::init_cerr_log(logging::severity_level::trace);
+    logging::init_cerr_log(logging::severity_level::info);
 
     logging::Logger logger("MAIN");
 
     std::srand((unsigned int) time(0));
 
-    size_t N = 10;
+    size_t N = 100000;
     size_t P = 1;
     Matrix X = Matrix::Random(N, P);
     Matrix c = Matrix::Random(P, 1);
@@ -36,11 +36,11 @@ int main() {
     LOG_INFO << "Fitting a tree";
     decision_tree::DecisionTreeParams params;
 
-    params.max_depth = 3;
+    params.max_depth = 6;
     params.criterion = decision_tree::SplitCriterion::kMSECriterion;
 
     decision_tree::DecisionTree<ModelType::kSupervisedRegressor> tree(params);
     tree.fit(X, Y);
 
-    std::cout << tree.transform(X) << std::endl << "*****" << std::endl << Y << std::endl;
+    std::cout << (tree.transform(X)-Y).squaredNorm() << std::endl << "*****" << std::endl;
 }
